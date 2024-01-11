@@ -1,8 +1,9 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
-//const generatorMarkdown = require('.utils/generateMarkdown.js');
-
+const generateMarkdown = require('./utils/generateMarkdown');
+//const generatorMarkdown = require('.Develop/utils/generateMarkdown.js');
+const fileName =`./readme-storage/readmetest.md`;
 inquirer
     .prompt([
         {
@@ -29,7 +30,7 @@ inquirer
             type: 'list',
             name: 'license',
             message: "Which license would you like to use",
-            choices: ['MIT', 'Mozilla', 'Creative Commons', 'SIL'],
+            choices: ['MIT', 'Mozilla', 'Eclipse', 'SIL'],
         },
         {
             type: 'input',
@@ -38,14 +39,20 @@ inquirer
         },
     ])
     .then((data) => {
-
-        fs.writeFile(`./readme-storage/readmetest.md`, JSON.stringify(data,null, '\t'), (err)  =>
-        err ? console.log(err) : console.log('Success!')
-        );
+        writeToFile(fileName, data);
     });
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+//Creates and stores the generated readme in /readme-storage and generates a test file for debugging
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, generateMarkdown(data), function (err) {
+        if (err) throw err;
+        console.log('Readme generated!');
+    });
+    //Creates a file displaying the stored data
+    fs.writeFile('./readme-storage/test.md', JSON.stringify(data), function (err) {
+        if (err) throw err;
+    })
+};
 
 // TODO: Create a function to initialize app
 function init() {}
